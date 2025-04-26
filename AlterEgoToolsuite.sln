@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35931.197 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlterEgoEditor", "AlterEgoEditor\AlterEgoEditor.csproj", "{BF3D9237-8D97-4F7F-9248-C3624E78AC1B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BF3D9237-8D97-4F7F-9248-C3624E78AC1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF3D9237-8D97-4F7F-9248-C3624E78AC1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF3D9237-8D97-4F7F-9248-C3624E78AC1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF3D9237-8D97-4F7F-9248-C3624E78AC1B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {89BF820F-9150-4BD8-A0F4-00808502548A}
+	EndGlobalSection
+EndGlobal
