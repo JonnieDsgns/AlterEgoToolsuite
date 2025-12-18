@@ -5,6 +5,11 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/PresentationFramework.Fluent;component/Themes/Fluent.xaml" />
+                <ResourceDictionary Source="Themes/ButtonStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <FontFamily x:Key="ZTNature">pack://application:,,,/Resources/Fonts/ZT Nature#ZT Nature</FontFamily>
             <Style TargetType="Button" x:Key="btnClose" BasedOn="{StaticResource {x:Type Button}}">
                 <Style.Triggers>
                     <Trigger Property="IsMouseOver" Value="True">
@@ -12,16 +17,6 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
-            <Style TargetType="TabItem" x:Key="customTabs" BasedOn="{StaticResource {x:Type TabItem}}">
-                <Style.Triggers>
-                    <Trigger Property="IsSelected" Value="True">
-                        <Setter Property="Background" Value="#FF191919"/>
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/PresentationFramework.Fluent;component/Themes/Fluent.xaml" />
-            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -10,19 +10,54 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Test.xaml.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Remove="Test.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Resources\Icons\alterEgoEditorIcon.ico" />
     <Resource Include="Resources\Icons\EditorLogo.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="FileHandler\" />
-    <Folder Include="UIHandler\" />
-    <Folder Include="ViewModel\" />
-    <Folder Include="Resources\Images\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <SplashScreen Include="Resources\SplashScreen\SplashScreen.png" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\Engine\Engine.csproj" />
+  </ItemGroup>
+
+    <ItemGroup>
+        <Compile Update="Views\StartupView.xaml.cs">
+            <DependentUpon>StartupView.xaml</DependentUpon>
+        </Compile>
+        <Compile Update="Views\CreateProjectWindow.xaml.cs">
+            <DependentUpon>CreateProjectWindow.xaml</DependentUpon>
+        </Compile>
+        <Compile Update="Views\EditorView.xaml.cs">
+            <DependentUpon>EditorView.xaml</DependentUpon>
+        </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Page Update="Views\StartupView.xaml">
+            <XamlRuntime>Wpf</XamlRuntime>
+            <SubType>Designer</SubType>
+        </Page>
+        <Page Update="Views\CreateProjectWindow.xaml">
+            <XamlRuntime>Wpf</XamlRuntime>
+            <SubType>Designer</SubType>
+        </Page>
+        <Page Update="Views\EditorView.xaml">
+            <XamlRuntime>Wpf</XamlRuntime>
+            <SubType>Designer</SubType>
+        </Page>
+    </ItemGroup>
 
 </Project>

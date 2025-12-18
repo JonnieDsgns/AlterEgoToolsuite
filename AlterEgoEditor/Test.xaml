@@ -3,41 +3,21 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:vm="clr-namespace:AlterEgoEditor.ViewModels"  
-        xmlns:views="clr-namespace:AlterEgoEditor.Views"
-        xmlns:models="clr-namespace:Core.Models;assembly=Core"
-        xmlns:converters="clr-namespace:AlterEgoEditor.Converters"
+        xmlns:local="clr-namespace:AlterEgoEditor"
         mc:Ignorable="d"
         WindowStyle="SingleBorderWindow"
         WindowStartupLocation="CenterScreen"
         Title="AlterEgo Editor" 
         Height="850" MinHeight="650" Width="1495" MinWidth="855">
 
-    <Window.DataContext>
-        <vm:MainViewModel/>
-    </Window.DataContext>
-
-    <Window.Resources>
-        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
-        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-
-        <DataTemplate DataType="{x:Type vm:StartupViewModel}">
-            <views:StartupView/>
-        </DataTemplate>
-
-        <DataTemplate DataType="{x:Type vm:MainViewModel}">
-            <views:EditorView/>
-        </DataTemplate>
-        
-    </Window.Resources>
-
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="0" UseAeroCaptionButtons="False" CornerRadius="10" CaptionHeight="0"/>
     </WindowChrome.WindowChrome>
-
+    
     <Grid Name="FullWindow" Background="#FF161616">
         <Grid.RowDefinitions>
             <RowDefinition Height="88"/>
+            <RowDefinition Height="2"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="2"/>
             <RowDefinition Height="30"/>
@@ -45,26 +25,24 @@
 
         <!-- Top Menu Bar (Unchanged) -->
         <Grid Name="TopMenuBar" Grid.Row="0" Background="Transparent" MouseLeftButtonDown="Window_MouseLeftButtonDown">
-            <!-- ... (Keep existing TopMenuBar content) ... -->
-            <DockPanel>
+             <!-- ... (Keep existing TopMenuBar content) ... -->
+             <DockPanel>
                 <Image Name="Logo" Height="40" Margin="24" HorizontalAlignment="Left" Source="/Resources/Icons/EditorLogo.png" />
                 <StackPanel Name="LeftHandControls" Orientation="Vertical">
                     <StackPanel Name="TopMenu" Orientation="Horizontal">
                         <Menu FontFamily="{StaticResource ZTNature}" FontWeight="Regular" FontSize="14">
                             <MenuItem Header="File">
-                                <MenuItem Header="New Project" Command="{Binding CreateNewProjectCommand}"/>
-                                <MenuItem Header="Open Project" Command="{Binding OpenProjectCommand}"/>
-                                <MenuItem Header="Save" Command="{Binding SaveProjectCommand}"/>
-                                <MenuItem Header="Save As" Command="{Binding SaveProjectAsCommand}"/>
+                                <MenuItem Header="New Project" />
+                                <MenuItem Header="Open Project" />
+                                <MenuItem Header="Save" />
+                                <MenuItem Header="Save As" />
                                 <Separator />
                                 <MenuItem Header="Export to Mod" />
                                 <Separator />
-                                <MenuItem Header="Close Project" Command="{Binding CloseProjectCommand}"/>
+                                <MenuItem Header="Close Project"/>
                                 <MenuItem Header="Exit" Click="btnClose_Click"/>
                             </MenuItem>
                             <MenuItem Header="Edit">
-                                <MenuItem Header="Project Settings"/>
-                                <Separator />
                                 <MenuItem Header="Undo" />
                                 <Separator />
                                 <MenuItem Header="Copy" />
@@ -73,7 +51,7 @@
                             <MenuItem Header="Help">
                                 <MenuItem Header="About AlterEgo Editor" />
                                 <Separator />
-                                <MenuItem Header="Discord" Command="{Binding OpenLinkCommand}" CommandParameter="https://discord.gg/R5dEjWXN"/>
+                                <MenuItem Header="Discord" />
                                 <MenuItem Header="YouTube" />
                                 <MenuItem Header="FAQ" />
                             </MenuItem>
@@ -88,11 +66,11 @@
             </StackPanel>
         </Grid>
 
-        <ContentControl Grid.Row="1" Content="{Binding CurrentView}" />
+        <ContentControl Name="MainViewArea" Grid.Row="2" />
 
-        <Grid Name="BottomSeparator" Grid.Row="2" Background="#282828"/>
-
-        <Grid Name="BottomPanel" Grid.Row="3" Background="Transparent">
+        <Grid Name="BottomSeparator" Grid.Row="3" Background="#282828"/>
+            
+        <Grid Name="BottomPanel" Grid.Row="4" Background="Transparent">
             <DockPanel VerticalAlignment="Center" Margin="4,4,4,4">
                 <TextBlock Text="AlterEgo Editor ©2026" FontSize="12" HorizontalAlignment="Left" Margin="10,0,0,0" FontFamily="{StaticResource ZTNature}" FontWeight="Light" Foreground="#FFB1B1B1" VerticalAlignment="Center"/>
                 <TextBlock Text="Currently in Pre-Alpha Status" FontSize="12" HorizontalAlignment="Right" Margin="0,0,10,0" FontFamily="{StaticResource ZTNature}" FontWeight="Light" Foreground="#FFB1B1B1" VerticalAlignment="Center"/>
