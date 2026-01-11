@@ -74,11 +74,8 @@ namespace AlterEgoEditor.ViewModels
                 // Load categories when ERP is selected
                 EnsureErpCategoriesLoaded(node);
                 
-                var resources = _indexerService.GetDetailedResources(node.FullPath);
-                foreach (var res in resources)
-                {
-                    ErpResources.Add(res);
-                }
+                // Load resources for display in the DataGrid
+                LoadErpResources(node.FullPath);
             }
 
         }

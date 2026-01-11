@@ -185,7 +185,10 @@ namespace Engine.Services
 
         private string[] SplitFilterTypes(string filterType)
         {
-            return filterType.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            return filterType.Split(',')
+                .Select(s => s.Trim())
+                .Where(s => !string.IsNullOrEmpty(s))
+                .ToArray();
         }
 
         public void ClearIndex()
