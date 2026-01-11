@@ -110,6 +110,13 @@ namespace Engine.Services
             return erpNode;
         }
 
+        /// <summary>
+        /// Loads and displays categories for an ERP file node in the tree view.
+        /// Categories are created based on predefined filters and only shown if they contain resources.
+        /// Resource nodes created under categories store the ERP file path in their FullPath property
+        /// since resources exist within the ERP archive, not as separate files.
+        /// </summary>
+        /// <param name="erpNode">The ERP file node to load categories for</param>
         public void LoadErpCategories(FileNode erpNode)
         {
             if (erpNode == null || !erpNode.ResourceType.Equals("ERP", StringComparison.OrdinalIgnoreCase))
@@ -159,8 +166,6 @@ namespace Engine.Services
                         // Add resources as children of the category
                         foreach (var resource in categoryResources)
                         {
-                            // Note: FullPath stores the parent ERP file path since resources 
-                            // exist within the ERP archive, not as separate files
                             var resourceNode = new FileNode(
                                 resource.Name,
                                 erpNode.FullPath,
