@@ -138,7 +138,7 @@ namespace Engine.Services
                         var matchedTypes = new HashSet<string>();
                         foreach (var (_, type) in _erpCategories.Where(c => c.filterType != null))
                         {
-                            var types = type.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                            var types = SplitFilterTypes(type);
                             foreach (var t in types)
                                 matchedTypes.Add(t);
                         }
@@ -147,7 +147,7 @@ namespace Engine.Services
                     else
                     {
                         // Parse the filter type (could be comma-separated like "World, WoInstances, EventGraph")
-                        var filterTypes = filterType.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                        var filterTypes = SplitFilterTypes(filterType);
                         categoryResources = allResources.Where(r => filterTypes.Contains(r.ResourceType)).ToList();
                     }
 
@@ -159,9 +159,11 @@ namespace Engine.Services
                         // Add resources as children of the category
                         foreach (var resource in categoryResources)
                         {
+                            // Note: FullPath stores the parent ERP file path since resources 
+                            // exist within the ERP archive, not as separate files
                             var resourceNode = new FileNode(
                                 resource.Name,
-                                erpNode.FullPath, // Store the ERP path so we can extract resources later
+                                erpNode.FullPath,
                                 resource.ResourceType,
                                 categoryNode
                             );
@@ -179,6 +181,11 @@ namespace Engine.Services
             }
 
             erpNode.IsLoaded = true;
+        }
+
+        private string[] SplitFilterTypes(string filterType)
+        {
+            return filterType.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
         public void ClearIndex()

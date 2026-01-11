@@ -72,10 +72,7 @@ namespace AlterEgoEditor.ViewModels
             if (node.ResourceType.Equals("erp", StringComparison.OrdinalIgnoreCase))
             {
                 // Load categories when ERP is selected
-                if (!node.IsLoaded)
-                {
-                    _indexerService.LoadErpCategories(node);
-                }
+                EnsureErpCategoriesLoaded(node);
                 
                 var resources = _indexerService.GetDetailedResources(node.FullPath);
                 foreach (var res in resources)
@@ -93,13 +90,18 @@ namespace AlterEgoEditor.ViewModels
             if (value != null && value.ResourceType.Equals("erp", StringComparison.OrdinalIgnoreCase))
             {
                 // Load categories when ERP is selected
-                if (!value.IsLoaded)
-                {
-                    _indexerService.LoadErpCategories(value);
-                }
+                EnsureErpCategoriesLoaded(value);
                 
                 // Also load resources for display in the DataGrid
                 LoadErpResources(value.FullPath);
+            }
+        }
+
+        private void EnsureErpCategoriesLoaded(FileNode node)
+        {
+            if (!node.IsLoaded)
+            {
+                _indexerService.LoadErpCategories(node);
             }
         }
 
