@@ -71,11 +71,11 @@ namespace AlterEgoEditor.ViewModels
             // Use a case-insensitive check to be safe
             if (node.ResourceType.Equals("erp", StringComparison.OrdinalIgnoreCase))
             {
-                var resources = _indexerService.GetDetailedResources(node.FullPath);
-                foreach (var res in resources)
-                {
-                    ErpResources.Add(res);
-                }
+                // Load categories when ERP is selected
+                EnsureErpCategoriesLoaded(node);
+                
+                // Load resources for display in the DataGrid
+                LoadErpResources(node.FullPath);
             }
 
         }
@@ -86,7 +86,19 @@ namespace AlterEgoEditor.ViewModels
 
             if (value != null && value.ResourceType.Equals("erp", StringComparison.OrdinalIgnoreCase))
             {
+                // Load categories when ERP is selected
+                EnsureErpCategoriesLoaded(value);
+                
+                // Also load resources for display in the DataGrid
                 LoadErpResources(value.FullPath);
+            }
+        }
+
+        private void EnsureErpCategoriesLoaded(FileNode node)
+        {
+            if (!node.IsLoaded)
+            {
+                _indexerService.LoadErpCategories(node);
             }
         }
 

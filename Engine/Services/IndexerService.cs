@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -104,7 +105,95 @@ namespace Engine.Services
         private FileNode CreateErpNode(FileInfo file, FileNode parent)
         {
             var erpNode = new FileNode(file.Name, file.FullName, "ERP", parent);
+            // Add a placeholder child to indicate lazy loading is needed
+            erpNode.Children.Add(new FileNode("Loading...", "", "Placeholder", erpNode));
             return erpNode;
+        }
+
+        /// <summary>
+        /// Loads and displays categories for an ERP file node in the tree view.
+        /// Categories are created based on predefined filters and only shown if they contain resources.
+        /// Resource nodes created under categories store the ERP file path in their FullPath property
+        /// since resources exist within the ERP archive, not as separate files.
+        /// </summary>
+        /// <param name="erpNode">The ERP file node to load categories for</param>
+        public void LoadErpCategories(FileNode erpNode)
+        {
+            if (erpNode == null || !erpNode.ResourceType.Equals("ERP", StringComparison.OrdinalIgnoreCase))
+                return;
+
+            // If already loaded, don't reload
+            if (erpNode.IsLoaded)
+                return;
+
+            // Clear any placeholder children
+            erpNode.Children.Clear();
+
+            try
+            {
+                // Get all resources from the ERP file
+                var allResources = GetDetailedResources(erpNode.FullPath).ToList();
+                
+                // Group resources by category
+                foreach (var (displayName, filterType) in _erpCategories)
+                {
+                    IEnumerable<ResourceNode> categoryResources;
+                    
+                    if (filterType == null)
+                    {
+                        // "Other" category - get resources that don't match any other category
+                        var matchedTypes = new HashSet<string>();
+                        foreach (var (_, type) in _erpCategories.Where(c => c.filterType != null))
+                        {
+                            var types = SplitFilterTypes(type);
+                            foreach (var t in types)
+                                matchedTypes.Add(t);
+                        }
+                        categoryResources = allResources.Where(r => !matchedTypes.Contains(r.ResourceType)).ToList();
+                    }
+                    else
+                    {
+                        // Parse the filter type (could be comma-separated like "World, WoInstances, EventGraph")
+                        var filterTypes = SplitFilterTypes(filterType);
+                        categoryResources = allResources.Where(r => filterTypes.Contains(r.ResourceType)).ToList();
+                    }
+
+                    // Only add category if it has resources
+                    if (categoryResources.Any())
+                    {
+                        var categoryNode = new FileNode(displayName, "", "Category", erpNode);
+                        
+                        // Add resources as children of the category
+                        foreach (var resource in categoryResources)
+                        {
+                            var resourceNode = new FileNode(
+                                resource.Name,
+                                erpNode.FullPath,
+                                resource.ResourceType,
+                                categoryNode
+                            );
+                            categoryNode.Children.Add(resourceNode);
+                        }
+                        
+                        erpNode.Children.Add(categoryNode);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // If there's an error loading resources, add an error node
+                erpNode.Children.Add(new FileNode($"Error loading: {ex.Message}", "", "Error", erpNode));
+            }
+
+            erpNode.IsLoaded = true;
+        }
+
+        private string[] SplitFilterTypes(string filterType)
+        {
+            return filterType.Split(',')
+                .Select(s => s.Trim())
+                .Where(s => !string.IsNullOrEmpty(s))
+                .ToArray();
         }
 
         public void ClearIndex()
