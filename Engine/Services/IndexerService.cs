@@ -122,52 +122,60 @@ namespace Engine.Services
             // Clear any placeholder children
             erpNode.Children.Clear();
 
-            // Get all resources from the ERP file
-            var allResources = GetDetailedResources(erpNode.FullPath).ToList();
-            
-            // Group resources by category
-            foreach (var (displayName, filterType) in _erpCategories)
+            try
             {
-                IEnumerable<ResourceNode> categoryResources;
+                // Get all resources from the ERP file
+                var allResources = GetDetailedResources(erpNode.FullPath).ToList();
                 
-                if (filterType == null)
+                // Group resources by category
+                foreach (var (displayName, filterType) in _erpCategories)
                 {
-                    // "Other" category - get resources that don't match any other category
-                    var matchedTypes = new HashSet<string>();
-                    foreach (var (_, type) in _erpCategories.Where(c => c.filterType != null))
+                    IEnumerable<ResourceNode> categoryResources;
+                    
+                    if (filterType == null)
                     {
-                        var types = type.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                        foreach (var t in types)
-                            matchedTypes.Add(t);
+                        // "Other" category - get resources that don't match any other category
+                        var matchedTypes = new HashSet<string>();
+                        foreach (var (_, type) in _erpCategories.Where(c => c.filterType != null))
+                        {
+                            var types = type.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                            foreach (var t in types)
+                                matchedTypes.Add(t);
+                        }
+                        categoryResources = allResources.Where(r => !matchedTypes.Contains(r.ResourceType)).ToList();
                     }
-                    categoryResources = allResources.Where(r => !matchedTypes.Contains(r.ResourceType)).ToList();
-                }
-                else
-                {
-                    // Parse the filter type (could be comma-separated like "World, WoInstances, EventGraph")
-                    var filterTypes = filterType.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                    categoryResources = allResources.Where(r => filterTypes.Contains(r.ResourceType)).ToList();
-                }
+                    else
+                    {
+                        // Parse the filter type (could be comma-separated like "World, WoInstances, EventGraph")
+                        var filterTypes = filterType.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                        categoryResources = allResources.Where(r => filterTypes.Contains(r.ResourceType)).ToList();
+                    }
 
-                // Only add category if it has resources
-                if (categoryResources.Any())
-                {
-                    var categoryNode = new FileNode(displayName, "", "Category", erpNode);
-                    
-                    // Add resources as children of the category
-                    foreach (var resource in categoryResources)
+                    // Only add category if it has resources
+                    if (categoryResources.Any())
                     {
-                        var resourceNode = new FileNode(
-                            resource.Name,
-                            erpNode.FullPath, // Store the ERP path so we can extract resources later
-                            resource.ResourceType,
-                            categoryNode
-                        );
-                        categoryNode.Children.Add(resourceNode);
+                        var categoryNode = new FileNode(displayName, "", "Category", erpNode);
+                        
+                        // Add resources as children of the category
+                        foreach (var resource in categoryResources)
+                        {
+                            var resourceNode = new FileNode(
+                                resource.Name,
+                                erpNode.FullPath, // Store the ERP path so we can extract resources later
+                                resource.ResourceType,
+                                categoryNode
+                            );
+                            categoryNode.Children.Add(resourceNode);
+                        }
+                        
+                        erpNode.Children.Add(categoryNode);
                     }
-                    
-                    erpNode.Children.Add(categoryNode);
                 }
+            }
+            catch (Exception ex)
+            {
+                // If there's an error loading resources, add an error node
+                erpNode.Children.Add(new FileNode($"Error loading: {ex.Message}", "", "Error", erpNode));
             }
 
             erpNode.IsLoaded = true;
