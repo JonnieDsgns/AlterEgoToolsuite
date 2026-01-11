@@ -19,12 +19,24 @@ namespace Engine.Services
             _erpManager = erpManager ?? throw new ArgumentNullException(nameof(erpManager));
         }
 
+        private static readonly (string displayName, string filterType)[] _erpCategories =
+        {
+            ("Textures", "GfxSRVResource"),
+            ("Materials", "GfxMaterialRes"),
+            ("Models", "GfxMeshRes"),
+            ("Xml Files", "VTF"),
+            ("Pkg Files", "World, WoInstances, EventGraph"),
+            ("Other", null) // null means "everything else"
+        };
+
+        public (string displayName, string filterType)[] ErpCategories => _erpCategories;
+
         public ObservableCollection<FileNode> BuildIndex(string gameRootPath)
         {
             var rootNodes = new ObservableCollection<FileNode>();
 
             if (!Directory.Exists(gameRootPath))
-                return rootNodes;
+                return rootNodes; // returns the root Folder of the game installation
 
             try
             {
@@ -73,45 +85,25 @@ namespace Engine.Services
         {
             string extension = file.Extension.ToLower();
 
+            // Special handling for ERP files
+            if (extension == ".erp")
+            {
+                return CreateErpNode(file, parent);
+            }
+
             // Standard file handling
             return new FileNode(file.Name, file.FullName, GetResourceTypeFromExtension(file.Name), parent);
         }
 
-        public IEnumerable<string> GetErpResourceNames(string path) 
-        {
-            return _erpManager.GetInternalResourceNames(path);
-        }
-
         public IEnumerable<ResourceNode> GetDetailedResources(string path)
         {
-            // This calls the method you already wrote in ErpHandleManager
+            // This calls the method in ErpHandleManager
             return _erpManager.GetDetailedResources(path);
         }
 
         private FileNode CreateErpNode(FileInfo file, FileNode parent)
         {
             var erpNode = new FileNode(file.Name, file.FullName, "ERP", parent);
-
-            // This is where we handle ERP resources. 
-            // We can change this logic later to be "On-Demand" (lazy loading)
-            try
-            {
-                var internalResources = _erpManager.GetInternalResourceNames(file.FullName);
-                foreach (var resName in internalResources)
-                {
-                    var resNode = new FileNode(
-                        resName,
-                        $"{file.FullName}::{resName}",
-                        GetResourceTypeFromExtension(resName),
-                        erpNode);
-                    erpNode.Children.Add(resNode);
-                }
-            }
-            catch
-            {
-                // Add an error node or leave empty if ERP is corrupted
-            }
-
             return erpNode;
         }
 
@@ -122,10 +114,16 @@ namespace Engine.Services
         
         private string GetResourceTypeFromExtension(string fileName)
         {
-            if (fileName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase)) return "BinXML";
-            if (fileName.EndsWith(".dds", StringComparison.OrdinalIgnoreCase)) return "Texture";
+            if (fileName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase)) return "binXML";
+            if (fileName.EndsWith(".dds", StringComparison.OrdinalIgnoreCase)) return "dds";
+            if (fileName.EndsWith(".png", StringComparison.OrdinalIgnoreCase)) return "png";
             if (fileName.EndsWith(".erp", StringComparison.OrdinalIgnoreCase)) return "erp";
-
+            if (fileName.EndsWith(".pkg", StringComparison.OrdinalIgnoreCase)) return "pkg";
+            if (fileName.EndsWith(".dll", StringComparison.OrdinalIgnoreCase)) return "dll";
+            if (fileName.EndsWith(".exe", StringComparison.OrdinalIgnoreCase)) return "exe";
+            if (fileName.EndsWith(".dat", StringComparison.OrdinalIgnoreCase)) return "dat";
+            if (fileName.EndsWith(".daf", StringComparison.OrdinalIgnoreCase)) return "daf";
+            if (fileName.EndsWith(".cfg", StringComparison.OrdinalIgnoreCase)) return "cfg";
             return "Unknown";
         }
     }

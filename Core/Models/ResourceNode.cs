@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Core.Models
@@ -19,17 +14,28 @@ namespace Core.Models
         [ObservableProperty]
         private string _resourceType;
 
-        // Like FileNode, you might want to track if a specific resource is edited
+        [ObservableProperty]
+        private string _folder;
+
+        [ObservableProperty]
+        private ulong _size;
+
+        [ObservableProperty]
+        private ulong _packedSize;
+
         [ObservableProperty]
         private bool _isModified;
 
         public ResourceNode() { }
 
-        public ResourceNode(string name, string uri, string resourceType)
+        public ResourceNode(string name, string uri, string resourceType, string folder = "", ulong size = 0, ulong packedSize = 0)
         {
             Name = name;
             Uri = uri;
             ResourceType = resourceType;
+            Folder = folder;
+            Size = size;
+            PackedSize = packedSize;
         }
     }
 }

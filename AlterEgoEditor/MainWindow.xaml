@@ -25,7 +25,7 @@
             <views:StartupView/>
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type vm:MainViewModel}">
+        <DataTemplate DataType="{x:Type vm:EditorViewModel}">
             <views:EditorView/>
         </DataTemplate>
         
@@ -80,12 +80,20 @@
                         </Menu>
                     </StackPanel>
                 </StackPanel>
+                <StackPanel Name="WindowControls" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right">
+                    <TextBlock Text="{Binding ActiveProject.ProjectName}" 
+                   VerticalAlignment="Center" 
+                   Margin="0,0,15,0" 
+                   FontSize="12" 
+                   Foreground="#FFB1B1B1" 
+                   FontFamily="{StaticResource ZTNature}" 
+                   FontWeight="Light"
+                   />
+                    <Button x:Name="btnMinimize" Click="btnMinimize_Click" FontFamily="Segoe Fluent Icons" Content="&#xE921;" FontSize="10" Width="44" Height="44" Background="Transparent" BorderBrush="Transparent" Foreground="White"/>
+                    <Button x:Name="btnMaximize" Click="btnMaximize_Click" FontFamily="Segoe Fluent Icons" Content="&#xE922;" FontSize="10" Width="44" Height="44" Background="Transparent" BorderBrush="Transparent" Foreground="White"/>
+                    <Button x:Name="btnClose" Click="btnClose_Click" FontFamily="Segoe Fluent Icons" Content="&#xE8BB;" FontSize="10" Width="44" Height="44" Background="Transparent" BorderBrush="Transparent" Foreground="White" Style="{StaticResource btnClose}"/>
+                </StackPanel>
             </DockPanel>
-            <StackPanel Name="WindowControls" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right">
-                <Button x:Name="btnMinimize" Click="btnMinimize_Click" FontFamily="Segoe Fluent Icons" Content="&#xE921;" FontSize="10" Width="44" Height="44" Background="Transparent" BorderBrush="Transparent" Foreground="White"/>
-                <Button x:Name="btnMaximize" Click="btnMaximize_Click" FontFamily="Segoe Fluent Icons" Content="&#xE922;" FontSize="10" Width="44" Height="44" Background="Transparent" BorderBrush="Transparent" Foreground="White"/>
-                <Button x:Name="btnClose" Click="btnClose_Click" FontFamily="Segoe Fluent Icons" Content="&#xE8BB;" FontSize="10" Width="44" Height="44" Background="Transparent" BorderBrush="Transparent" Foreground="White" Style="{StaticResource btnClose}"/>
-            </StackPanel>
         </Grid>
 
         <ContentControl Grid.Row="1" Content="{Binding CurrentView}" />

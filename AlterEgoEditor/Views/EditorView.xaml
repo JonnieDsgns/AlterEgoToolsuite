@@ -148,9 +148,7 @@
             </Grid>
             <GridSplitter Grid.Column="1" Width="2" Background="#282828" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
             <Grid Name="ContentArea" Grid.Column="2">
-                <DockPanel >
-                    <ContentControl x:Name="MainContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-                </DockPanel>
+                <ContentControl Content="{Binding SelectedDocument}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
             </Grid>
         </Grid>
     </Grid>

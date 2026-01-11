@@ -55,17 +55,17 @@ namespace AlterEgoEditor.ViewModels
         [RelayCommand]
         private void CreateNewProject()
         {
-            // 1. Check if we have any games to offer
+            // Check if there are available games to select from
             if (AvailableGames == null || AvailableGames.Count == 0)
             {
                 MessageBox.Show("No game installations found. Please check scanner settings.", "Error");
                 return;
             }
 
-            // 2. Create the ViewModel for the modal, passing the list of available games.
+            // Create the CreateProjectViewModel for the modal window
             var createVm = new CreateProjectViewModel(AvailableGames);
 
-            // 3. Set up the event handler: When the modal VM successfully creates a project, 
+            // Set up the event handler: When the modal VM successfully creates a project, 
             // this method relays that project back to the MainViewModel.
             createVm.ProjectCreated += (newProject) =>
             {
@@ -73,7 +73,7 @@ namespace AlterEgoEditor.ViewModels
                 ProjectCreated?.Invoke(newProject);
             };
 
-            // 4. Create and show the modal window.
+            // Create and show the modal window.
             var window = new CreateProjectWindow(createVm);
             window.ShowDialog();
         }
