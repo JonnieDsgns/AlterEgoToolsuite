@@ -75,6 +75,11 @@
                                 </StackPanel>
                             </HierarchicalDataTemplate>
                         </TreeView.ItemTemplate>
+                        <TreeView.ItemContainerStyle>
+                            <Style TargetType="TreeViewItem">
+                                <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+                            </Style>
+                        </TreeView.ItemContainerStyle>
                     </TreeView>
                 </Grid>
                 <GridSplitter Grid.Row="1" Height="2" Background="#282828" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
